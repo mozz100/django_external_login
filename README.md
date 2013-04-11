@@ -21,3 +21,9 @@ You should only give READ access to the credentials used.  Giving WRITE access i
     }
 
 That should be it.
+
+Limitations:
+
+* Can't reset password - need to do that at the external source.
+* Can't detect logged-in-ness at external site because of cookie domain restrictions.  Even if currently logged in there, must log in locally.
+* No sync of data - if you change your username or email in the remote DB, no way to find out here.  That would be easy to script but might cause confusion.
