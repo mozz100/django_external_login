@@ -11,9 +11,13 @@ Read-only access to the auth_user table is all that's required, and all that I'd
 
 If you can't arrange that, you'll have to find some other way to achieve 'external authentication'.
 
+Make sure you read the limitations section below.
+
 ## How it works (briefly)
 
-Provides a new authentication backend.  Accesses the 'master' database when users authenticate, fetching their (hashed)
+Provides a new authentication backend.  See https://docs.djangoproject.com/en/1.4/topics/auth/#writing-an-authentication-backend
+
+Accesses the 'master' database when users authenticate, fetching their (hashed)
 password by looking it up using the username supplied.  If the supplied password passes Django's normal checks, *against
 the details from the master database*, the user is treated as authenticated.
 
@@ -50,6 +54,7 @@ That should be it.
 
 ## Limitations:
 
+* Only tried with Django 1.4 so far.
 * Can't reset password - need to do that at the external source.
 * Can't detect logged-in-ness at external site because of cookie domain restrictions.  Even if currently logged in there, must log in locally.
 * No sync of data - if you change your username or email in the remote DB, no way to find out here.  That would be easy to script but might cause confusion.
