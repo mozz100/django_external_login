@@ -1,4 +1,4 @@
-# django_external_login
+# Django External Login
 
 Allow your users to log in using the same username/password they already use on another Django site.
 
