@@ -12,23 +12,24 @@ class ExternalDBBackend(object):
 
     def authenticate(self, username=None, password=None):
         # Use our connection to the external database to authenticate the user
+        credentials_valid = False # let's assume the worst, it's more secure that way
         try:
+            # look up user in the external database, and attempt password check
             external_user = ExternalUser.objects.using("external_login").get(username=username)
-            login_valid = True
-            pwd_valid = check_password(password, external_user.password)
+            credentials_valid = check_password(password, external_user.password)
         except ExternalUser.DoesNotExist:
             external_user = None
-            login_valid = False
-            pwd_valid = False
+            credentials_valid = False
 
-        if login_valid and pwd_valid:
+        if credentials_valid:
             try:
+                # look for local user, create if necessary
                 user = User.objects.get(username=username)
             except User.DoesNotExist:
                 # Create a new user. Note that we can set password
                 # to anything, because it won't be checked; the password
                 # from the external database will.
-                user = User(username=username, password='whatever I like, never used')
+                user = User(username=username)
                 # in fact, let's set the password to Django's proper 'unusable' one
                 user.set_unusable_password()
                 # TODO: copy attributes from the remote database to the local User model
